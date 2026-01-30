@@ -55,7 +55,7 @@ func DayActionInfo(data string, weight, height float64) string {
 		return ""
 	}
 
-	// Проверяем количество шагов
+	// Проверяем количество шагов (еще раз, на всякий случай)
 	if steps <= 0 {
 		return ""
 	}
@@ -66,20 +66,15 @@ func DayActionInfo(data string, weight, height float64) string {
 	// Переводим дистанцию в километры
 	distanceKm := distanceMeters / mInKm
 
-	// Вычисляем калории
+	// Вычисляем калории с помощью функции из spentcalories
 	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
 	if err != nil {
 		fmt.Printf("Ошибка расчета калорий: %v\n", err)
 		return ""
 	}
 
-	// Формируем строку результата
-	result := fmt.Sprintf(
-		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.",
-		steps,
-		distanceKm,
-		calories,
-	)
+	// Формируем строку результата в точном формате
+	result := fmt.Sprintf("Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.", steps, distanceKm, calories)
 
 	return result
 }
