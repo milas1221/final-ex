@@ -17,18 +17,14 @@ const (
 func parsePackage(data string) (int, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, fmt.Errorf("неверный формат данных")
+		return 0, 0, fmt.Errorf("неверный формат данных: ожидается 2 части, получено %d", len(parts))
 	}
 
 	// Парсим количество шагов
 	stepsStr := strings.TrimSpace(parts[0])
-	if stepsStr == "" {
-		return 0, 0, fmt.Errorf("количество шагов не указано")
-	}
-	
 	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
-		return 0, 0, fmt.Errorf("ошибка парсинга количества шагов")
+		return 0, 0, fmt.Errorf("ошибка парсинга количества шагов: %v", err)
 	}
 
 	// Проверяем, что шаги больше 0
@@ -38,13 +34,9 @@ func parsePackage(data string) (int, time.Duration, error) {
 
 	// Парсим продолжительность
 	durationStr := strings.TrimSpace(parts[1])
-	if durationStr == "" {
-		return 0, 0, fmt.Errorf("продолжительность не указана")
-	}
-	
 	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
-		return 0, 0, fmt.Errorf("ошибка парсинга продолжительности")
+		return 0, 0, fmt.Errorf("ошибка парсинга продолжительности: %v", err)
 	}
 
 	// Проверяем, что продолжительность больше 0
