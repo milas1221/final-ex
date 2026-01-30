@@ -17,35 +17,24 @@ const (
 func parseTraining(data string) (int, string, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 3 {
-		return 0, "", 0, fmt.Errorf("неверный формат данных")
+		return 0, "", 0, fmt.Errorf("неверный формат данных: ожидается 3 части, получено %d", len(parts))
 	}
 
 	// Парсим количество шагов
 	stepsStr := strings.TrimSpace(parts[0])
-	if stepsStr == "" {
-		return 0, "", 0, fmt.Errorf("количество шагов не указано")
-	}
-	
 	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
-		return 0, "", 0, fmt.Errorf("ошибка парсинга количества шагов")
+		return 0, "", 0, fmt.Errorf("ошибка парсинга количества шагов: %v", err)
 	}
 
 	// Получаем вид активности
 	activity := strings.TrimSpace(parts[1])
-	if activity == "" {
-		return 0, "", 0, fmt.Errorf("вид активности не указан")
-	}
 
 	// Парсим продолжительность
 	durationStr := strings.TrimSpace(parts[2])
-	if durationStr == "" {
-		return 0, "", 0, fmt.Errorf("продолжительность не указана")
-	}
-	
 	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
-		return 0, "", 0, fmt.Errorf("ошибка парсинга продолжительности")
+		return 0, "", 0, fmt.Errorf("ошибка парсинга продолжительности: %v", err)
 	}
 
 	return steps, activity, duration, nil
@@ -152,12 +141,14 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	}
 
 	var calories float64
+	var dist float64
+	var speed float64
 	
 	// Вычисляем дистанцию
-	dist := distance(steps, height)
+	dist = distance(steps, height)
 	
 	// Вычисляем среднюю скорость
-	speed := meanSpeed(steps, height, duration)
+	speed = meanSpeed(steps, height, duration)
 	
 	// Определяем тип тренировки и вычисляем калории
 	switch activity {
@@ -172,7 +163,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 			return "", fmt.Errorf("ошибка расчета калорий для бега: %v", err)
 		}
 	default:
-		return "", fmt.Errorf("неизвестный тип тренировки: %s", activity)
+		return "", fmt.Errorf("неизвестный тип тренировки")
 	}
 
 	// Формируем строку с информацией о тренировке
